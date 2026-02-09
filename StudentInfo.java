@@ -17,12 +17,13 @@ public class StudentInfo {
 
         System.out.println("************************************************************");
         System.out.println("*                                                          *");
-        System.out.println("*                                                          *");
-        System.out.println("*                                                          *");
-        System.out.println("*                                                          *");
+        System.out.println("* Student 1: Ahmad Alomari   (300463659)                   *");
+        System.out.println("* Student 2: Ismael Abed Ali (300471260)                   *");
+        System.out.println("* Section C                                                *");
         System.out.println("************************************************************");
         System.out.println();
 
     }
 
 }
+
