@@ -3,7 +3,7 @@ import java.util.Scanner;
 
 /**
  * @author Mehrdad Sabetzadeh, University of Ottawa
- 	Ahmad Alomari * Ismael Abd Ali
+ 	Ahmad Alomari * Ismael Abed Ali
  */
 public class ParkingLot {
 	/**
