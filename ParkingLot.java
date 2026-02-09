@@ -75,6 +75,12 @@ public class ParkingLot {
 	 */
 	public void park(int i, int j, Car c) {
 		// WRITE YOUR CODE HERE!
+		if(canParkAt(i,j,c)) {
+			occupancy[i][j] = c; }
+		else {
+			System.out.println("Car " +c+ " cannot be parked at (" + i + "," +j+ ")");
+		}
+		
 	}
 
 	/**
@@ -87,8 +93,31 @@ public class ParkingLot {
 	 */
 	public Car remove(int i, int j) {
 		// WRITE YOUR CODE HERE!
-		return null; // REMOVE THIS STATEMENT AFTER IMPLEMENTING THIS METHOD
-
+		//rows
+		if (i<0) {
+			return null;	
+		}
+		
+		if (i>=numRows) {
+			return null;
+		}
+		
+		//columns
+		if (j<0) {
+			return null;
+		}
+		
+		if (j >= numSpotsPerRow) {
+			return null;
+		}
+		
+		if (occupancy[i][j] ==null) {
+			return null;
+		}
+		
+		Car removedCar = occupancy[i][j];
+		occupancy[i][j] = null;
+		return removedCar;
 	}
 
 	/**
@@ -101,7 +130,62 @@ public class ParkingLot {
 	 */
 	public boolean canParkAt(int i, int j, Car c) {
 		// WRITE YOUR CODE HERE!
-		return false; // REMOVE THIS STATEMENT AFTER IMPLEMENTING THIS METHOD
+		//checking if car is null
+		if (c == null) {
+			return false;
+		}
+		
+		if (i < 0) {
+			return false;
+		}
+		
+		if (j < 0) {
+			return false;
+		}
+		
+		if (i >= numRows) {
+			return false;
+		}
+		
+		if (j >= numSpotsPerRow) {
+			return false;
+		}
+		
+		//check if null and if spot is occupied
+		if (lotDesign[i][j] == CarType.NA) {
+			return false;
+		}
+		
+		if (occupancy[i][j] != null) {
+			return false;
+		}
+		
+		CarType spotType = lotDesign[i][j];
+		CarType carType = c.getType();
+		
+		//car rules
+		if (carType == CarType.ELECTRIC) {
+			return true;
+		}
+		
+		if (carType == CarType.SMALL) {
+			if(spotType == CarType.SMALL) return true;
+			if(spotType == CarType.REGULAR) return true;
+			if(spotType == CarType.LARGE) return true;
+			return false;
+		}
+		if (carType == CarType.REGULAR) {
+			if(spotType == CarType.REGULAR) return true;
+			if(spotType == CarType.LARGE) return true;
+			return false;
+		}
+		
+		if (carType == CarType.LARGE) {
+			if (spotType == CarType.LARGE)return true;
+			return false;
+		}
+		
+		return false;
 
 	}
 
@@ -111,7 +195,19 @@ public class ParkingLot {
 	 */
 	public int getTotalCapacity() {
 		// WRITE YOUR CODE HERE!
-		return -1; // REMOVE THIS STATEMENT AFTER IMPLEMENTING THIS METHOD
+		int spots = 0;
+		int i;
+		int j;
+		
+		for (i=0; i<lotDesign.length;i++) {
+			for (j=0; j< lotDesign[0].length; j++) {
+				
+				if (lotDesign[i][j] != CarType.NA) {
+					spots = spots + 1; }
+				
+			}
+		}
+		return spots; 
 
 	}
 
@@ -121,7 +217,18 @@ public class ParkingLot {
 	 */
 	public int getTotalOccupancy() {
 		// WRITE YOUR CODE HERE!
-		return -1; // REMOVE THIS STATEMENT AFTER IMPLEMENTING THIS METHOD		
+		int parked = 0;
+		int i;
+		int j;
+		
+		for (i=0; i<occupancy.length; i++) {
+			for (j=0; j < occupancy[0].length; j++) {
+				
+				if (occupancy[i][j]!= null) {
+					parked = parked + 1; }
+			}
+		}
+		return parked; 		
 	}
 
 	private void calculateLotDimensions(String strFilename) throws Exception {
