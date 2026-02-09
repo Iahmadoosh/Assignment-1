@@ -3,6 +3,7 @@ import java.util.Scanner;
 
 /**
  * @author Mehrdad Sabetzadeh, University of Ottawa
+ 	Ahmad Alomari * Ismael Abd Ali
  */
 public class ParkingLot {
 	/**
@@ -42,7 +43,7 @@ public class ParkingLot {
 	 * 
 	 * @param strFilename is the name of the file
 	 */
-	public ParkingLot(String strFilename) throws Exception {
+	public ParkingLot(String strFilename) throws Exception { // ismael dont touch this
 
 		if (strFilename == null) {
 			System.out.println("File name cannot be null.");
@@ -55,7 +56,9 @@ public class ParkingLot {
 		calculateLotDimensions(strFilename);
 
 		// instantiate the lotDesign and occupancy variables!
-		// WRITE YOUR CODE HERE!
+		// Building the arrays
+		this.lotDesign = new CarType[numRows][numSpotsPerRow];
+		this.occupancy = new Car[numRows][numSpotsPerRow];
 
 		// populate lotDesign and occupancy; you can do so by
 		// writing your own code or alternatively completing the 
@@ -124,12 +127,28 @@ public class ParkingLot {
 	private void calculateLotDimensions(String strFilename) throws Exception {
 
 		Scanner scanner = new Scanner(new File(strFilename));
+		int localRows = 0;
+		int localCols = 0;
 
 		while (scanner.hasNext()) {
-			String str = scanner.nextLine();
-			// WRITE YOUR CODE HERE!
-		}
+			String str = scanner.nextLine().trim();
 
+			if (str.isEmpty()) { continue; } // Skipping empty lines
+
+			if (str.equals(SECTIONER)) { break; }	// Stopping once the scanner sees ###
+
+			localRows++; // Incrementing rows for each successful run
+
+			// Only need to calculate columns once
+			if (localRows == 1){
+				String[] parts = str.split(SEPARATOR);
+				localCols = parts.length;
+			
+			}
+		}
+		// Updating the actual instance variables
+		this.numRows = localRows;
+		this.numSpotsPerRow = localCols;
 		scanner.close();
 	}
 
@@ -137,22 +156,48 @@ public class ParkingLot {
 
 		Scanner scanner = new Scanner(new File(strFilename));
 
-		// YOU MAY NEED TO DEFINE SOME LOCAL VARIABLES HERE!
+		// defining local variables
+		String str;
+		String[] parts;
+		int currentRow = 0;
 
 		// while loop for reading the lot design
 		while (scanner.hasNext()) {
-			String str = scanner.nextLine();
-			// WRITE YOUR CODE HERE!
+			str = scanner.nextLine().trim();
+			if (str.isEmpty()){ continue; } // skiping empty lines in the code
+			if (str.equals(SECTIONER)){ break; } // exiting the loop when the sectioner is found
+
+			parts = str.split(SEPARATOR);
+			for (int j = 0; j < parts.length; j++){
+				// converting cartypes ex. "S" to car type small
+				this.lotDesign[currentRow][j] = Util.getCarTypeByLabel(parts[j].trim());
+			}
+			currentRow++; // incrementing the row for the next run
 		}
 
 		// while loop for reading occupancy data
 		while (scanner.hasNext()) {
-			String str = scanner.nextLine();
-			// WRITE YOUR CODE HERE!
-		}
+			str = scanner.nextLine().trim();
+			if (str.isEmpty()){ continue; } // skipping empty lines
 
+			parts = str.split(SEPARATOR);	
+
+			// Converting the strings to coordinates i & j
+			int i = Integer.parseInt(parts[0].trim());
+			int j = Integer.parseInt(parts[1].trim());
+
+			// Create the car using the label and the plate number
+			CarType type = Util.getCarTypeByLabel(parts[2].trim());
+			String plateNum = parts[3].trim();
+			Car c = new Car(type, plateNum);
+
+			// using the park method to park the car
+			this.park(i , j ,c);
+		}
 		scanner.close();
+		
 	}
+
 
 	/**
 	 * Produce string representation of the parking lot
