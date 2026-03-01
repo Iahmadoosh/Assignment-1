@@ -24,8 +24,16 @@ public class TriangularDistribution {
 	 * @param b is the upper limit of the distribution
 	 */
 	public TriangularDistribution(int a, int c, int b) {
-	
-		// WRITE YOUR CODE HERE!
+		
+		// checking if the condition a < c < b holds
+		if (a < c && c < b){
+			// setting the class variables
+			this.a = a;
+			this.c = c;
+			this.b = b;
+		} else { // if the condition does not hold
+			System.out.println("Invalid range provided, no triangular distribution possible"); // return an error to the user
+		}
 
 	}
 
@@ -34,10 +42,35 @@ public class TriangularDistribution {
 	 * @return the probability density at point x
 	 */
 	public Rational pdf(int x) {
+		int numerator, denominator;
 
-		// WRITE YOUR CODE HERE!
-
-		return null; // Remove this statement when your implementation is complete.
+		// checking where x falls in relation to the boundaries
+		// Case 1 - Outside the boundaries
+		if (x < a || x > b){
+			return new Rational(0,1);
+		}
+		// Case 2 - Upward slope
+		else if (( a <= x) && (x < c)){
+			numerator = 2 * (x - a);
+			denominator = (b - a) * (c - a);
+			return new Rational(numerator, denominator);
+		}
+		// Case 3 - the peak
+		else if (x == c){
+			numerator = 2;
+			denominator = b - a;
+			return new Rational(numerator, denominator);
+		}
+		// Case 4 - Downward slope
+		else if ((c < x) && (x <= b)){
+			numerator = 2 * (b - x);
+			denominator = (b - a) * (b - c);
+			return new Rational(numerator, denominator);
+		}
+		// default case (should never be reached)
+		else {
+			return new Rational(0,1);
+		}
 	}
 
 	/**
